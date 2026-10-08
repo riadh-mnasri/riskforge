@@ -16,7 +16,12 @@ fn forward(id: u32, strike: f64, direction: Direction, quantity: f64) -> Trade {
 }
 
 fn option(id: u32, kind: OptionKind, strike: f64, direction: Direction, quantity: f64) -> Trade {
-    Trade::new(id, Instrument::EuropeanOption { kind, strike }, direction, quantity)
+    Trade::new(
+        id,
+        Instrument::EuropeanOption { kind, strike },
+        direction,
+        quantity,
+    )
 }
 
 #[test]
