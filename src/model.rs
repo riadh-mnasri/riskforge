@@ -44,7 +44,12 @@ pub struct Trade {
 
 impl Trade {
     pub fn new(id: u32, instrument: Instrument, direction: Direction, quantity: f64) -> Self {
-        Self { id, instrument, direction, quantity }
+        Self {
+            id,
+            instrument,
+            direction,
+            quantity,
+        }
     }
 
     /// MtM du trade pour un prix spot donné.
@@ -64,7 +69,10 @@ pub struct NettingSet {
 
 impl NettingSet {
     pub fn new(counterparty: &str) -> Self {
-        Self { counterparty: counterparty.to_string(), trades: Vec::new() }
+        Self {
+            counterparty: counterparty.to_string(),
+            trades: Vec::new(),
+        }
     }
 
     pub fn add(&mut self, trade: Trade) {

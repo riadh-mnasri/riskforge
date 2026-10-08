@@ -1,8 +1,6 @@
 // Copyright (c) 2026 Riadh MNASRI. Tous droits réservés.
 
-use riskforge::exposure::{
-    expected_exposure, exposure, exposure_profile, max_exposure, shift,
-};
+use riskforge::exposure::{expected_exposure, exposure, exposure_profile, max_exposure, shift};
 
 const EPSILON: f64 = 1e-9;
 
