@@ -25,7 +25,7 @@ git diff main solutions -- src/   # compare with the solution
 | 1 | Getting started | Cargo crate, simulation context | ✅ |
 | 2 | Language basics | `exposure`, `expected_exposure`, `max_exposure` | ✅ |
 | 3 | Ownership and borrowing | `shift` (&mut [f64]), `exposure_profile` | ✅ |
-| 4 | Structs, enums | Domain model: Trade, NettingSet | upcoming |
+| 4 | Structs, enums | `Trade`, `Instrument`, `NettingSet` (net and gross) | ✅ |
 | 5 | Error handling | CSV loading without panics | upcoming |
 | 6 | Traits and generics | GBM, Hull-White diffusion models | upcoming |
 | 7 | Closures and iterators | EE, 97.5% PFE, EPE | upcoming |
