@@ -4,3 +4,4 @@
 //! en suivant le parcours RustPrimer (https://rust-primer.vercel.app).
 
 pub mod exposure;
+pub mod model;
