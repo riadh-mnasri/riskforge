@@ -3,10 +3,7 @@
 //! Étape 5 du fil rouge : un portefeuille multi-contreparties.
 //!
 //! Les trades sont rangés par contrepartie, chacune avec son netting set.
-//! Remplace chaque `todo!()` puis lance `cargo test --test portfolio_test`.
-
-// Les paramètres restent inutilisés tant que les `todo!()` ne sont pas remplacés.
-#![allow(unused_variables, dead_code)]
+//! Implémentation de référence, limitée aux notions vues jusqu'au module 5.
 
 use std::collections::{BTreeMap, HashMap};
 
@@ -24,31 +21,51 @@ impl Portfolio {
 
     /// Range le trade dans le netting set de sa contrepartie (créé au besoin).
     pub fn add(&mut self, counterparty: &str, trade: Trade) {
-        todo!("étape 5 : l'API entry de HashMap")
+        self.netting_sets
+            .entry(counterparty.to_string())
+            .or_insert(NettingSet::new(counterparty))
+            .add(trade);
     }
 
     /// Le netting set d'une contrepartie, s'il existe.
     pub fn netting_set(&self, counterparty: &str) -> Option<&NettingSet> {
-        todo!("étape 5 : get renvoie déjà une Option")
+        self.netting_sets.get(counterparty)
     }
 
     /// Noms des contreparties, triés par ordre alphabétique.
     pub fn counterparties(&self) -> Vec<&str> {
-        todo!("étape 5 : collecter les clés puis trier")
+        let mut names = Vec::with_capacity(self.netting_sets.len());
+        for name in self.netting_sets.keys() {
+            names.push(name.as_str());
+        }
+        names.sort();
+        names
     }
 
     /// Nombre total de trades, toutes contreparties confondues.
     pub fn trade_count(&self) -> usize {
-        todo!("étape 5 : additionner la taille de chaque netting set")
+        let mut count = 0;
+        for set in self.netting_sets.values() {
+            count += set.trades().len();
+        }
+        count
     }
 
     /// Exposition nette par contrepartie, triée par nom.
     pub fn exposures(&self, spot: f64) -> BTreeMap<String, f64> {
-        todo!("étape 5 : une entrée par netting set")
+        let mut result = BTreeMap::new();
+        for (name, set) in &self.netting_sets {
+            result.insert(name.clone(), set.net_exposure(spot));
+        }
+        result
     }
 
     /// Somme des expositions nettes (pas de netting entre contreparties).
     pub fn total_exposure(&self, spot: f64) -> f64 {
-        todo!("étape 5 : somme des net_exposure")
+        let mut total = 0.0;
+        for set in self.netting_sets.values() {
+            total += set.net_exposure(spot);
+        }
+        total
     }
 }
