@@ -26,12 +26,13 @@ git diff main solutions -- src/   # compare with the solution
 | 2 | Language basics | `exposure`, `expected_exposure`, `max_exposure` | ✅ |
 | 3 | Ownership and borrowing | `shift` (&mut [f64]), `exposure_profile` | ✅ |
 | 4 | Structs, enums | `Trade`, `Instrument`, `NettingSet` (net and gross) | ✅ |
-| 5 | Error handling | CSV loading without panics | upcoming |
-| 6 | Traits and generics | GBM, Hull-White diffusion models | upcoming |
-| 7 | Closures and iterators | EE, 97.5% PFE, EPE | upcoming |
-| 8 | Tests and benchmarks | criterion, comparison with Kotlin | upcoming |
-| 9 | Concurrency | rayon | upcoming |
-| 10 | FFI | Called from Kotlin, JVM versus Rust benchmark | upcoming |
+| 5 | Collections | `Portfolio`: HashMap of netting sets, sorted report | ✅ |
+| 6 | Error handling | CSV loading without panics | upcoming |
+| 7 | Traits and generics | GBM, Hull-White diffusion models | upcoming |
+| 8 | Closures and iterators | EE, 97.5% PFE, EPE | upcoming |
+| 9 | Tests and benchmarks | criterion, comparison with Kotlin | upcoming |
+| 10 | Concurrency | rayon | upcoming |
+| 11 | FFI | Called from Kotlin, JVM versus Rust benchmark | upcoming |
 
 ## Requirements
 
