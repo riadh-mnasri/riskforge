@@ -7,11 +7,7 @@
 //! avec `instrument` parmi forward, call, put et `direction` parmi long, short.
 //! Les lignes vides et les lignes commençant par `#` sont ignorées.
 //!
-//! Les types d'erreurs et leurs messages sont fournis ; remplace chaque
-//! `todo!()` puis lance `cargo test --test loader_test`.
-
-// Les paramètres restent inutilisés tant que les `todo!()` ne sont pas remplacés.
-#![allow(unused_variables, unused_imports, dead_code)]
+//! Implémentation de référence, limitée aux notions vues jusqu'au module 6.
 
 use std::fmt;
 
@@ -65,30 +61,86 @@ impl std::error::Error for LoadError {}
 
 /// Convertit un champ texte en f64, ou renvoie `InvalidNumber` avec le nom du champ.
 pub fn parse_number(field: &'static str, value: &str) -> Result<f64, ParseError> {
-    todo!("étape 6 : parse puis map_err")
+    value.parse().map_err(|_| ParseError::InvalidNumber {
+        field,
+        value: value.to_string(),
+    })
 }
 
 /// Convertit l'identifiant en u32, ou renvoie `InvalidNumber { field: "id", .. }`.
 pub fn parse_id(value: &str) -> Result<u32, ParseError> {
-    todo!("étape 6 : comme parse_number, mais vers un u32")
+    value.parse().map_err(|_| ParseError::InvalidNumber {
+        field: "id",
+        value: value.to_string(),
+    })
 }
 
 /// "forward", "call" ou "put" (casse ignorée), avec le strike déjà converti.
 pub fn parse_instrument(value: &str, strike: f64) -> Result<Instrument, ParseError> {
-    todo!("étape 6 : un match sur la valeur en minuscules")
+    match value.to_lowercase().as_str() {
+        "forward" => Ok(Instrument::Forward { strike }),
+        "call" => Ok(Instrument::EuropeanOption {
+            kind: OptionKind::Call,
+            strike,
+        }),
+        "put" => Ok(Instrument::EuropeanOption {
+            kind: OptionKind::Put,
+            strike,
+        }),
+        _ => Err(ParseError::UnknownInstrument(value.to_string())),
+    }
 }
 
 /// "long" ou "short" (casse ignorée).
 pub fn parse_direction(value: &str) -> Result<Direction, ParseError> {
-    todo!("étape 6 : un match sur la valeur en minuscules")
+    match value.to_lowercase().as_str() {
+        "long" => Ok(Direction::Long),
+        "short" => Ok(Direction::Short),
+        _ => Err(ParseError::UnknownDirection(value.to_string())),
+    }
 }
 
 /// Une ligne CSV devient (contrepartie, trade). Les champs sont nettoyés avec `trim`.
 pub fn parse_trade(line: &str) -> Result<(String, Trade), ParseError> {
-    todo!("étape 6 : découper, vérifier le nombre de champs, puis ? sur chaque champ")
+    let mut fields = Vec::with_capacity(FIELD_COUNT);
+    for field in line.split(',') {
+        fields.push(field.trim());
+    }
+    if fields.len() != FIELD_COUNT {
+        return Err(ParseError::WrongFieldCount {
+            expected: FIELD_COUNT,
+            found: fields.len(),
+        });
+    }
+
+    let id = parse_id(fields[0])?;
+    let counterparty = fields[1];
+    if counterparty.is_empty() {
+        return Err(ParseError::EmptyCounterparty);
+    }
+    let strike = parse_number("strike", fields[3])?;
+    let instrument = parse_instrument(fields[2], strike)?;
+    let direction = parse_direction(fields[4])?;
+    let quantity = parse_number("quantity", fields[5])?;
+
+    let trade = Trade::new(id, instrument, direction, quantity);
+    Ok((counterparty.to_string(), trade))
 }
 
 /// Charge un CSV complet ; la première erreur rencontrée est renvoyée avec son numéro de ligne.
 pub fn load_portfolio(csv: &str) -> Result<Portfolio, LoadError> {
-    todo!("étape 6 : ignorer en-tête, lignes vides et commentaires, puis map_err + ?")
+    let mut portfolio = Portfolio::new();
+    for (index, line) in csv.lines().enumerate() {
+        let line_number = index + 1;
+        let trimmed = line.trim();
+        if line_number == 1 || trimmed.is_empty() || trimmed.starts_with('#') {
+            continue;
+        }
+        let (counterparty, trade) = parse_trade(trimmed).map_err(|error| LoadError {
+            line: line_number,
+            error,
+        })?;
+        portfolio.add(&counterparty, trade);
+    }
+    Ok(portfolio)
 }
