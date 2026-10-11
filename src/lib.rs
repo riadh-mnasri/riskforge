@@ -4,5 +4,6 @@
 //! en suivant le parcours RustPrimer (https://rust-primer.vercel.app).
 
 pub mod exposure;
+pub mod loader;
 pub mod model;
 pub mod portfolio;

@@ -1,0 +1,7 @@
+id,counterparty,instrument,strike,direction,quantity
+1,ACME,forward,100,long,1000
+2,ACME,forward,105,short,800
+# trade 3 annulé le 2026-10-02
+3,Globex,call,120,long,200
+4,Initech,put,95,short,100
+5,Initech,forward,98,long,150
