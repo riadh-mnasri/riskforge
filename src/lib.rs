@@ -3,7 +3,10 @@
 //! riskforge : moteur Monte Carlo de risque de contrepartie, construit pas à pas
 //! en suivant le parcours RustPrimer (https://rust-primer.vercel.app).
 
+pub mod diffusion;
 pub mod exposure;
 pub mod loader;
 pub mod model;
 pub mod portfolio;
+pub mod rng;
+pub mod simulation;

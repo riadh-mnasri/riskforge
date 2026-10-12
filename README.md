@@ -28,11 +28,15 @@ git diff main solutions -- src/   # comparer avec la solution
 | 4 | Structs, enums | `Trade`, `Instrument`, `NettingSet` (net et brut) | ✅ |
 | 5 | Collections | `Portfolio` : HashMap de netting sets, rapport trié | ✅ |
 | 6 | Gestion des erreurs | `loader` : CSV vers `Portfolio`, erreurs typées et numérotées | ✅ |
-| 7 | Traits et génériques | Modèles de diffusion GBM, Hull-White | à venir |
+| 7 | Traits et génériques | Trait `DiffusionModel` (GBM, Ornstein-Uhlenbeck), simulation Monte Carlo, profil d'EE | ✅ |
 | 8 | Closures et itérateurs | EE, PFE 97,5 %, EPE | à venir |
 | 9 | Tests et benchmarks | criterion, comparaison avec Kotlin | à venir |
 | 10 | Concurrence | rayon | à venir |
 | 11 | FFI | Appel depuis Kotlin, benchmark JVM contre Rust | à venir |
+
+## Fourni, pas à coder
+
+`src/rng.rs` : générateur pseudo-aléatoire déterministe (SplitMix64 + Box-Muller). Une graine fixe rend les simulations reproductibles, et donc testables.
 
 ## Prérequis
 
