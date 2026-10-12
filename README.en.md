@@ -28,11 +28,15 @@ git diff main solutions -- src/   # compare with the solution
 | 4 | Structs, enums | `Trade`, `Instrument`, `NettingSet` (net and gross) | ✅ |
 | 5 | Collections | `Portfolio`: HashMap of netting sets, sorted report | ✅ |
 | 6 | Error handling | `loader`: CSV to `Portfolio`, typed and line-numbered errors | ✅ |
-| 7 | Traits and generics | GBM, Hull-White diffusion models | upcoming |
+| 7 | Traits and generics | `DiffusionModel` trait (GBM, Ornstein-Uhlenbeck), Monte Carlo simulation, EE profile | ✅ |
 | 8 | Closures and iterators | EE, 97.5% PFE, EPE | upcoming |
 | 9 | Tests and benchmarks | criterion, comparison with Kotlin | upcoming |
 | 10 | Concurrency | rayon | upcoming |
 | 11 | FFI | Called from Kotlin, JVM versus Rust benchmark | upcoming |
+
+## Provided, not to code
+
+`src/rng.rs`: a deterministic pseudo-random generator (SplitMix64 + Box-Muller). A fixed seed makes simulations reproducible, and therefore testable.
 
 ## Requirements
 
