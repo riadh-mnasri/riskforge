@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let grid = simulate(model.as_ref(), &config);
         let profile = expected_exposure_profile(acme, &grid);
         println!(
-            "  {:<32} 1y {:>9.2}   2y {:>9.2}   5y {:>9.2}",
+            "  {:<34} 1y {:>9.2}   2y {:>9.2}   5y {:>9.2}",
             model.name(),
             profile[12],
             profile[24],
