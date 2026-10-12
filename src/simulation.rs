@@ -2,10 +2,7 @@
 
 //! Étape 7 du fil rouge : simulation Monte Carlo et profil d'exposition simulé.
 //!
-//! Remplace chaque `todo!()` puis lance `cargo test --test simulation_test`.
-
-// Les paramètres restent inutilisés tant que les `todo!()` ne sont pas remplacés.
-#![allow(unused_variables, unused_imports)]
+//! Implémentation de référence, limitée aux notions vues jusqu'au module 7.
 
 use crate::diffusion::DiffusionModel;
 use crate::exposure::expected_exposure;
@@ -36,10 +33,29 @@ impl SimulationConfig {
 /// les pas de la trajectoire 0, puis ceux de la 1...), avec un `Rng` créé à
 /// partir de `config.seed`. Le `?Sized` autorise aussi un `&dyn DiffusionModel`.
 pub fn simulate<M: DiffusionModel + ?Sized>(model: &M, config: &SimulationConfig) -> Vec<Vec<f64>> {
-    todo!("étape 7 : une boucle sur les trajectoires, une boucle sur les pas")
+    let dt = config.dt();
+    let mut rng = Rng::new(config.seed);
+    let mut grid = vec![Vec::with_capacity(config.paths); config.steps + 1];
+    for _ in 0..config.paths {
+        let mut value = config.spot;
+        grid[0].push(value);
+        for row in grid.iter_mut().skip(1) {
+            value = model.step(value, dt, rng.normal());
+            row.push(value);
+        }
+    }
+    grid
 }
 
 /// EE du netting set à chaque date de la grille : moyenne des expositions nettes.
 pub fn expected_exposure_profile(set: &NettingSet, grid: &[Vec<f64>]) -> Vec<f64> {
-    todo!("étape 7 : pour chaque date, net_exposure de chaque scénario, puis la moyenne")
+    let mut profile = Vec::with_capacity(grid.len());
+    for scenarios in grid {
+        let mut net_mtms = Vec::with_capacity(scenarios.len());
+        for &spot in scenarios {
+            net_mtms.push(set.net_mtm(spot));
+        }
+        profile.push(expected_exposure(&net_mtms));
+    }
+    profile
 }

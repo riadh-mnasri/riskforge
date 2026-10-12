@@ -2,10 +2,7 @@
 
 //! Étape 7 du fil rouge : les modèles de diffusion derrière un trait commun.
 //!
-//! Remplace chaque `todo!()` puis lance `cargo test --test diffusion_test`.
-
-// Les paramètres restent inutilisés tant que les `todo!()` ne sont pas remplacés.
-#![allow(unused_variables)]
+//! Implémentation de référence, limitée aux notions vues jusqu'au module 7.
 
 /// Fait évoluer une valeur de marché sur un pas de temps.
 pub trait DiffusionModel {
@@ -27,11 +24,12 @@ pub struct Gbm {
 
 impl DiffusionModel for Gbm {
     fn step(&self, current: f64, dt: f64, z: f64) -> f64 {
-        todo!("étape 7 : la formule du GBM ci-dessus")
+        let sigma = self.volatility;
+        current * ((self.drift - 0.5 * sigma * sigma) * dt + sigma * dt.sqrt() * z).exp()
     }
 
     fn name(&self) -> String {
-        todo!("étape 7 : par exemple \"GBM(mu=0.05, sigma=0.2)\"")
+        format!("GBM(mu={}, sigma={})", self.drift, self.volatility)
     }
 }
 
@@ -50,10 +48,18 @@ pub struct MeanReverting {
 
 impl DiffusionModel for MeanReverting {
     fn step(&self, current: f64, dt: f64, z: f64) -> f64 {
-        todo!("étape 7 : la discrétisation exacte, avec le cas speed == 0")
+        if self.speed == 0.0 {
+            return current + self.volatility * dt.sqrt() * z;
+        }
+        let decay = (-self.speed * dt).exp();
+        let std_dev = self.volatility * ((1.0 - decay * decay) / (2.0 * self.speed)).sqrt();
+        self.mean + (current - self.mean) * decay + std_dev * z
     }
 
     fn name(&self) -> String {
-        todo!("étape 7 : par exemple \"OU(speed=2, mean=100, sigma=5)\"")
+        format!(
+            "OU(speed={}, mean={}, sigma={})",
+            self.speed, self.mean, self.volatility
+        )
     }
 }
